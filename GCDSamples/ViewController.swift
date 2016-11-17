@@ -33,15 +33,23 @@ class ViewController: UIViewController {
         //queuesWithQoS()
         
         
-         concurrentQueues()
-         if let queue = inactiveQueue {
-            queue.activate()
-         }
+//         concurrentQueues()
+//         if let queue = inactiveQueue {
+//            queue.activate()
+//         }
+//        
         
+ //        queueWithDelay()
         
-        // queueWithDelay()
+//        let globalQueue = DispatchQueue.global(qos: .userInitiated)
+//        
+//        globalQueue.async {
+//            for i in 0..<10 {
+//                print("🔴 ", i)
+//            }
+//        }
         
-        // fetchImage()
+         fetchImage()
         
         // useWorkItem()
     }
@@ -136,11 +144,37 @@ class ViewController: UIViewController {
     
     
     func queueWithDelay() {
+        let delayQueue = DispatchQueue(label: "com.nvovap.delayqueue", qos: .userInitiated)
         
+        print(Date())
+        
+        let additionalTime: DispatchTimeInterval = .seconds(2)
+        
+       // print(Double(additionalTime))
+        
+        delayQueue.asyncAfter(deadline: .now() + additionalTime) {
+            print(Date())
+        }
+        
+        delayQueue.asyncAfter(deadline: .now() + 0.75) {
+            print(Date())
+        }
     }
     
     
     func fetchImage() {
+        
+        let imageURL: URL = URL(string: "http://www.appcoda.com/wp-content/uploads/2015/12/blog-logo-dark-400.png")!
+        
+        (URLSession(configuration: URLSessionConfiguration.default).dataTask(with: imageURL, completionHandler: { (imageData, response, error) in
+            if let data = imageData {
+                
+                DispatchQueue.main.async {
+                    self.imageView.image = UIImage(data: data)
+                }
+                
+            }
+        })).resume()
         
     }
     
