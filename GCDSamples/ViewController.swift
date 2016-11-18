@@ -49,9 +49,9 @@ class ViewController: UIViewController {
 //            }
 //        }
         
-         fetchImage()
+//         fetchImage()
         
-        // useWorkItem()
+         useWorkItem()
     }
     
     
@@ -180,6 +180,25 @@ class ViewController: UIViewController {
     
     
     func useWorkItem() {
+        var value = 10
+        
+        let workItem = DispatchWorkItem { 
+            value += 5
+            print(value)
+        }
+        
+        
+        DispatchQueue.global().async {
+            workItem.perform()
+        }
+        
+        
+        DispatchQueue.global().async(execute: workItem)
+        
+        workItem.notify(queue: DispatchQueue.main) { 
+            print("Value = ", value)
+        }
+        
         
     }
 }
